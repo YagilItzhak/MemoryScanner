@@ -7,7 +7,6 @@ constexpr size_t MAX_OPERWTION_LENGTH = 6;
 int main(void)
 {
 	wchar_t path[260];
-	char operation[6];
 	unsigned long long int value;
 
 	puts("Please enter the prossess you what to follow:");
