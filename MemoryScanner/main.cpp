@@ -16,6 +16,7 @@ int main(void)
 
 	MemoryScannner ms(path);
 	ms.search(value);
+	ms.print();
 	
 	return 0;
 }

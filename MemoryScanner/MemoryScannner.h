@@ -9,6 +9,7 @@ public:
 	~MemoryScannner(void);
 
 	void search(const unsigned long long int value);
+	void print(void) const;
 
 private:
 	static bool isMemoryRegionValid(const MEMORY_BASIC_INFORMATION& memoryInfo);

@@ -1,4 +1,5 @@
 #include "MemoryScannner.h"
+#include <iostream>
 #include <Windows.h>
 #include <TlHelp32.h>
 
@@ -13,7 +14,7 @@ MemoryScannner::MemoryScannner(const std::wstring_view path)
 		perror("Failed to create process snapshot.");
 		exit(EXIT_FAILURE);
 	}
-	if (!Process32First(hSnapshot, &pe32))
+	if (Process32First(hSnapshot, &pe32) == ERROR_NO_MORE_FILES)
 	{
 		perror("Failed to retrieve module information.");
 		exit(EXIT_FAILURE);
@@ -91,5 +92,14 @@ void MemoryScannner::search(const unsigned long long int value)
 	for (HANDLE process : this->processes)
 	{
 		searchProcess(process, value);
+	}
+}
+
+void MemoryScannner::print(void) const
+{
+	puts("Those are the addresses:");
+	for (const void* address : this->addresses)
+	{
+		std::cout << std::hex << address << '\n';
 	}
 }
