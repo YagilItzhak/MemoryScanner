@@ -83,7 +83,7 @@ void MemoryScannner::searchMemoryRegion(HANDLE process, const MEMORY_BASIC_INFOR
 			}
 		}
 	}
-	delete buffer;
+	delete[] buffer;
 }
 
 void MemoryScannner::search(const unsigned long long int value)
