@@ -11,6 +11,7 @@ public:
 
 	void search(const int value);
 	void filter(const int value);
+	void write(const int value);
 	void print(void) const;
 
 private:
@@ -19,10 +20,8 @@ private:
 	void searchProcess(HANDLE process, const int value);
 	void searchMemoryRegion(HANDLE process, const MEMORY_BASIC_INFORMATION& memoryInfo, const int value);
 
-	void filter(const int value);
 	void filterProcess(HANDLE process, const int value);
 
-	void write(const int value);
 	void writeProcess(const HANDLE process, const int value);
 
 private:
