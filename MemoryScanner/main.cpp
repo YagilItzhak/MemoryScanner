@@ -23,6 +23,8 @@ int main(void)
 
 	value = askForValue();
 
+	getchar();
+
 	ms.search(value);
 	ms.print();
 
