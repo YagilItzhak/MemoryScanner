@@ -9,14 +9,21 @@ public:
 	MemoryScannner(const std::wstring_view path);
 	~MemoryScannner(void);
 
-	void search(const unsigned long long int value);
-	void filter(const unsigned long long int value);
+	void search(const int value);
+	void filter(const int value);
 	void print(void) const;
 
 private:
 	static bool isMemoryRegionValid(const MEMORY_BASIC_INFORMATION& memoryInfo);
-	void searchProcess(HANDLE process, const unsigned long long int value);
-	void searchMemoryRegion(HANDLE process, const MEMORY_BASIC_INFORMATION& memoryInfo, const unsigned long long int value);
+
+	void searchProcess(HANDLE process, const int value);
+	void searchMemoryRegion(HANDLE process, const MEMORY_BASIC_INFORMATION& memoryInfo, const int value);
+
+	void filter(const int value);
+	void filterProcess(HANDLE process, const int value);
+
+	void write(const int value);
+	void writeProcess(const HANDLE process, const int value);
 
 private:
 	std::vector<HANDLE> processes;

@@ -91,7 +91,7 @@ void MemoryScannner::filterProcess(HANDLE process, const int value)
 {
 	std::list<void*> temp;
 	int buffer;
-	size_t bytes_read = 0;
+	size_t bytes_read;
 
 	for (void* address : this->addresses)
 	{
@@ -102,6 +102,24 @@ void MemoryScannner::filterProcess(HANDLE process, const int value)
 			temp.push_back(address);
 		}
 
+	}
+}
+
+void MemoryScannner::write(const int value)
+{
+	for (const HANDLE process : this->processes)
+	{
+		writeProcess(process, value);
+	}
+}
+
+void MemoryScannner::writeProcess(const HANDLE process, const int value)
+{
+	size_t bytes_written;
+
+	for (void* address : this->addresses)
+	{
+		WriteProcessMemory(process, address, &value, sizeof(value), &bytes_written);
 	}
 }
 
