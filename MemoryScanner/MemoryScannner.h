@@ -6,7 +6,7 @@
 class MemoryScannner
 {
 public:
-	MemoryScannner(const std::wstring_view path);
+	MemoryScannner(const wchar_t path[MAX_PATH]);
 	~MemoryScannner(void);
 
 	void search(const int value);

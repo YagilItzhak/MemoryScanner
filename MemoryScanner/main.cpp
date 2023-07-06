@@ -20,6 +20,7 @@ int main(void)
 	std::wcin.getline(path, MAX_PATH);
 
 	MemoryScannner ms(path);
+	
 
 	value = askForValue();
 

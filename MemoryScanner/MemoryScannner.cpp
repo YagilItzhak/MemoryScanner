@@ -3,7 +3,7 @@
 #include <Windows.h>
 #include <TlHelp32.h>
 
-MemoryScannner::MemoryScannner(const std::wstring_view path) 
+MemoryScannner::MemoryScannner(const wchar_t path[MAX_PATH])
 {
 	HANDLE hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
 	PROCESSENTRY32 pe32;
@@ -21,8 +21,7 @@ MemoryScannner::MemoryScannner(const std::wstring_view path)
 	}
 
 	do {
-
-		if (path == pe32.szExeFile)
+		if (!wcscmp(path, pe32.szExeFile))
 		{
 			process = OpenProcess(PROCESS_ALL_ACCESS, true, pe32.th32ProcessID);
 
@@ -31,6 +30,12 @@ MemoryScannner::MemoryScannner(const std::wstring_view path)
 	} while (Process32Next(hSnapshot, &pe32));
 
 	CloseHandle(hSnapshot);
+
+	if (this->processes.empty())
+	{
+		perror("No process found");
+		exit(EXIT_FAILURE);
+	}
 }
 
 MemoryScannner::~MemoryScannner(void)
