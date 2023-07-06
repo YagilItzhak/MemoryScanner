@@ -16,7 +16,7 @@ int main(void)
 	int value;
 	char option;
 
-	fputs("Please enter the program you what to follow:", stdout);
+	fputs("Please enter the program you what to follow: ", stdout);
 	std::wcin.getline(path, MAX_PATH);
 
 	MemoryScannner ms(path);
