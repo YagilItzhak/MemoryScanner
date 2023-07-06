@@ -41,7 +41,7 @@ MemoryScannner::~MemoryScannner(void)
 	}
 }
 
-void MemoryScannner::searchProcess(HANDLE process, const unsigned long long int value)
+void MemoryScannner::searchProcess(HANDLE process, const int value)
 {
 	SYSTEM_INFO systemInfo;
 	GetSystemInfo(&systemInfo);
@@ -68,7 +68,7 @@ bool MemoryScannner::isMemoryRegionValid(const MEMORY_BASIC_INFORMATION& memoryI
 	return (memoryInfo.State == MEM_COMMIT) && (memoryInfo.Protect == PAGE_READWRITE || memoryInfo.Protect == PAGE_EXECUTE_READWRITE);
 }
 
-void MemoryScannner::searchMemoryRegion(HANDLE process, const MEMORY_BASIC_INFORMATION& memoryInfo, const unsigned long long int value)
+void MemoryScannner::searchMemoryRegion(HANDLE process, const MEMORY_BASIC_INFORMATION& memoryInfo, const int value)
 {
 	const size_t bufferSize = static_cast<size_t>(memoryInfo.RegionSize);
 	unsigned char* buffer = new unsigned char[bufferSize];
@@ -87,12 +87,39 @@ void MemoryScannner::searchMemoryRegion(HANDLE process, const MEMORY_BASIC_INFOR
 	delete[] buffer;
 }
 
-void MemoryScannner::search(const unsigned long long int value)
+void MemoryScannner::filterProcess(HANDLE process, const int value)
+{
+	std::list<void*> temp;
+	int buffer;
+	size_t bytes_read = 0;
+
+	for (void* address : this->addresses)
+	{
+		ReadProcessMemory(process, address, &buffer, sizeof(value), &bytes_read);
+
+		if (value == buffer)
+		{
+			temp.push_back(address);
+		}
+
+	}
+}
+
+void MemoryScannner::search(const int value)
 {
 	for (HANDLE process : this->processes)
 	{
 		searchProcess(process, value);
 	}
+}
+
+void MemoryScannner::filter(const int value)
+{
+	for (const HANDLE process : this->processes)
+	{
+		filterProcess(process, value);
+	}
+
 }
 
 void MemoryScannner::print(void) const

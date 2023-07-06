@@ -1,6 +1,7 @@
 #pragma once
 #include <string_view>
 #include <vector>
+#include <list>
 #include <Windows.h>
 class MemoryScannner
 {
@@ -9,6 +10,7 @@ public:
 	~MemoryScannner(void);
 
 	void search(const unsigned long long int value);
+	void filter(const unsigned long long int value);
 	void print(void) const;
 
 private:
@@ -18,6 +20,6 @@ private:
 
 private:
 	std::vector<HANDLE> processes;
-	std::vector<void*> addresses;
+	std::list<void*> addresses;
 };
 
