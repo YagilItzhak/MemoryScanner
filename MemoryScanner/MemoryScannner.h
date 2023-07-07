@@ -15,7 +15,7 @@ public:
 	void print(void) const;
 
 private:
-	static bool isMemoryRegionValid(const MEMORY_BASIC_INFORMATION& memoryInfo);
+	inline static bool isMemoryRegionValid(const MEMORY_BASIC_INFORMATION& memoryInfo);
 
 	void searchProcess(HANDLE process, const int value);
 	void searchMemoryRegion(HANDLE process, const MEMORY_BASIC_INFORMATION& memoryInfo, const int value);

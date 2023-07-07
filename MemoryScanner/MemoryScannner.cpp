@@ -3,40 +3,40 @@
 #include <Windows.h>
 #include <TlHelp32.h>
 
-MemoryScannner::MemoryScannner(const wchar_t path[MAX_PATH])
-{
+MemoryScannner::MemoryScannner(const wchar_t path[MAX_PATH]) {
 	HANDLE hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
-	PROCESSENTRY32 pe32;
-	pe32.dwSize = sizeof(MODULEENTRY32);
-	HANDLE process;
-	if (hSnapshot == INVALID_HANDLE_VALUE)
-	{
-		perror("Failed to create process snapshot.");
-		exit(EXIT_FAILURE);
+	if (hSnapshot == INVALID_HANDLE_VALUE) {
+		throw std::runtime_error("Failed to create process snapshot.");
 	}
-	if (Process32First(hSnapshot, &pe32) == ERROR_NO_MORE_FILES)
-	{
-		perror("Failed to retrieve module information.");
-		exit(EXIT_FAILURE);
+
+	PROCESSENTRY32 pe32;
+	pe32.dwSize = sizeof(PROCESSENTRY32);
+
+	if (!Process32First(hSnapshot, &pe32)) {
+		CloseHandle(hSnapshot);
+		throw std::runtime_error("Failed to retrieve process information.");
 	}
 
 	do {
-		if (!wcscmp(path, pe32.szExeFile))
-		{
-			process = OpenProcess(PROCESS_ALL_ACCESS, true, pe32.th32ProcessID);
-
-			this->processes.push_back(process);
+		if (!wcscmp(path, pe32.szExeFile)) {
+			HANDLE process = OpenProcess(PROCESS_ALL_ACCESS, FALSE, pe32.th32ProcessID);
+			if (process != NULL) {
+				this->processes.push_back(process);
+			}
+			else {
+				CloseHandle(hSnapshot);
+				throw std::runtime_error("Failed to open process.");
+			}
 		}
 	} while (Process32Next(hSnapshot, &pe32));
 
 	CloseHandle(hSnapshot);
 
-	if (this->processes.empty())
-	{
-		perror("No process found");
-		exit(EXIT_FAILURE);
+	if (this->processes.empty()) {
+		throw std::runtime_error("No process found.");
 	}
 }
+
 
 MemoryScannner::~MemoryScannner(void)
 {
@@ -68,7 +68,7 @@ void MemoryScannner::searchProcess(HANDLE process, const int value)
 	}
 }
 
-bool MemoryScannner::isMemoryRegionValid(const MEMORY_BASIC_INFORMATION& memoryInfo)
+inline bool MemoryScannner::isMemoryRegionValid(const MEMORY_BASIC_INFORMATION& memoryInfo)
 {
 	return (memoryInfo.State == MEM_COMMIT) && (memoryInfo.Protect == PAGE_READWRITE || memoryInfo.Protect == PAGE_EXECUTE_READWRITE);
 }
@@ -147,6 +147,9 @@ void MemoryScannner::filter(const int value)
 
 void MemoryScannner::print(void) const
 {
+	if (this->addresses.empty())
+		return;
+
 	puts("Those are the addresses:");
 	for (const void* address : this->addresses)
 	{
