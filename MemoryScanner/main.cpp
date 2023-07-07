@@ -1,5 +1,5 @@
 #include <iostream>
-#include "MemoryScannner.h"
+#include "MemoryScanner.h"
 
 int askForValue(void)
 {
