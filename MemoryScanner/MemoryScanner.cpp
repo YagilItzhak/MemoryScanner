@@ -1,4 +1,4 @@
-#include "MemoryScannner.h"
+#include "MemoryScanner.h"
 #include <iostream>
 #include <Windows.h>
 #include <TlHelp32.h>

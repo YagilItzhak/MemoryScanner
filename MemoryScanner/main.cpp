@@ -24,7 +24,7 @@ int main(void)
 
 	value = askForValue();
 
-	getchar();
+	std::cin.ignore();
 
 	ms.search(value);
 	ms.print();
@@ -36,6 +36,7 @@ int main(void)
 		puts("             e to exit");
 
 		option = getchar();
+		std::cin.ignore();
 
 		if (option == 'u')
 		{
