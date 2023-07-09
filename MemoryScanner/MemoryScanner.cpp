@@ -3,6 +3,8 @@
 #include <Windows.h>
 #include <TlHelp32.h>
 
+#include "MemoryFormatReader.h"
+
 MemoryScannner::MemoryScannner(const wchar_t path[MAX_PATH]) {
 	HANDLE hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
 	if (hSnapshot == INVALID_HANDLE_VALUE) {
@@ -83,7 +85,7 @@ void MemoryScannner::searchMemoryRegion(HANDLE process, const MEMORY_BASIC_INFOR
 	{
 		for (size_t i = 0; i < bufferSize - sizeof(value); i++)
 		{
-			if (*reinterpret_cast<unsigned long long int*>(buffer + i) == value)
+			if (*static_cast<int*>(buffer + i) == value)
 			{
 				this->addresses.push_back(reinterpret_cast<void*>(reinterpret_cast<unsigned char*>(memoryInfo.BaseAddress) + i));
 			}
