@@ -22,8 +22,11 @@ std::vector<MemoryFormatReader::FormatSpecifier> MemoryFormatReader::parseFormat
 		}
 
 		while (format[formatIndex] != ':' && formatIndex < formatSize) {
-			specifier.numSize = (specifier.numSize * 10) + (format[formatIndex] - '0');
-			formatIndex++;
+            if (isdigit(format.at(formatIndex)))
+            {
+                specifier.numSize = (specifier.numSize * 10) + (format.at(formatIndex) - '0');
+                formatIndex++;
+            }
 		}
 
 		// Check if we have reached the end of the format
