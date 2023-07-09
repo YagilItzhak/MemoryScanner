@@ -2,6 +2,8 @@
 #include <vector>
 #include <list>
 #include <Windows.h>
+#include <map>
+
 class MemoryScannner
 {
 public:

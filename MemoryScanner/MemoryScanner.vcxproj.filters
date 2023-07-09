@@ -21,6 +21,12 @@
     <ClCompile Include="MemoryScanner.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="MemoryFormatReader.h">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MemoryFormatReader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MemoryScanner.h">
