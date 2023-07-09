@@ -15,6 +15,8 @@ namespace MemoryFormatReader {
         bool isOptional;
     };
 
+    static bool isFormatStringValid(const std::string& format);
+
     std::vector<FormatSpecifier> parseFormatString(const std::string& format);
 
     template <typename T>
