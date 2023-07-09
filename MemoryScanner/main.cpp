@@ -14,7 +14,7 @@ int main(void)
 {
 	wchar_t path[MAX_PATH];
 	int value;
-	char option;
+	int option;
 
 	fputs("Please enter the program you what to follow: ", stdout);
 	std::wcin.getline(path, MAX_PATH);

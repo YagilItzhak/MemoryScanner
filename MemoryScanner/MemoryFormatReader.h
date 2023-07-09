@@ -7,7 +7,7 @@
 #include <map>
 
 namespace MemoryFormatReader {
-    constexpr std::size_t BITS_IN_BYTE = 8;
+    constexpr inline std::size_t BITS_IN_BYTE = 8;
 
     struct FormatSpecifier {
         std::size_t numSize;
@@ -20,16 +20,15 @@ namespace MemoryFormatReader {
     template <typename T>
     std::optional<T> readNumberFromMemory(const void* memory, std::size_t numSize)
     {
-        constexpr std::size_t BYTE_SIZE = sizeof(std::byte);
 
-        if (numSize > BITS_IN_BYTE * BYTE_SIZE) {
+        if (numSize > BITS_IN_BYTE) {
             throw std::runtime_error("Number size exceeds maximum supported size");
         }
 
-        std::bitset<BITS_IN_BYTE * BYTE_SIZE> bits;
+        std::bitset<BITS_IN_BYTE> bits;
         std::memcpy(&bits, memory, (numSize + BITS_IN_BYTE - 1) / BITS_IN_BYTE);
 
-        return static_cast<T>(bits.to_ullong() >> (BITS_IN_BYTE * BYTE_SIZE - numSize));
+        return static_cast<T>(bits.to_ullong() >> (BITS_IN_BYTE - numSize));
     }
 
     std::string readStringFromMemory(const void* memory, const std::size_t numSize);

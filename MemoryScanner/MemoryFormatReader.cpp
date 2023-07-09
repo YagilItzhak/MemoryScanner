@@ -90,29 +90,34 @@ std::map<const void*, std::string> MemoryFormatReader::readDataFromMemory(const 
             switch (specifier.dataType)
             {
             case 'u':
+            {
                 // Unsigned integer
                 std::optional<std::uint64_t> number = readNumberFromMemory<std::uint64_t>(dataPointer, specifier.numSize);
                 if (number.has_value())
                 {
-                    matches.emplace(dataPointer, std::to_string(*number));
+                    matches.emplace(dataPointer, std::to_string(number.value()));
                 }
+            }
                 break;
             case 'i': 
+            {
                 // Signed integer
                 std::optional<std::int64_t> number = readNumberFromMemory<std::int64_t>(dataPointer, specifier.numSize);
                 if (number.has_value())
                 {
-                    matches.emplace(dataPointer, std::to_string(*number));
+                    matches.emplace(dataPointer, std::to_string(number.value()));
                 }
                 break;
+            }
             case 'f':
+            {
                 // Floating-point number
                 if (specifier.numSize == 32)
                 {
                     std::optional<float> number = readNumberFromMemory<float>(dataPointer, specifier.numSize);
                     if (number.has_value())
                     {
-                        matches.emplace(dataPointer, std::to_string(*number));
+                        matches.emplace(dataPointer, std::to_string(number.value()));
                     }
                 }
                 else if (specifier.numSize == 64)
@@ -120,7 +125,7 @@ std::map<const void*, std::string> MemoryFormatReader::readDataFromMemory(const 
                     std::optional<double> number = readNumberFromMemory<double>(dataPointer, specifier.numSize);
                     if (number.has_value())
                     {
-                        matches.emplace(dataPointer, std::to_string(*number));
+                        matches.emplace(dataPointer, std::to_string(number.value()));
                     }
                 }
                 else
@@ -128,8 +133,9 @@ std::map<const void*, std::string> MemoryFormatReader::readDataFromMemory(const 
                     throw std::runtime_error("Invalid floating-point number size");
                 }
                 break;
-
+            }
             default:
+            {
                 // String
                 const std::string expectedString = specifier.dataType == '?' ? "" : std::string(1, specifier.dataType);
                 const std::string actualString = readStringFromMemory(dataPointer, specifier.numSize);
@@ -139,6 +145,7 @@ std::map<const void*, std::string> MemoryFormatReader::readDataFromMemory(const 
                     matches.emplace(dataPointer, actualString);
                 }
                 break;
+            }
             }
         }
 
