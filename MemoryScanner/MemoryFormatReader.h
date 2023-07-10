@@ -17,10 +17,8 @@ namespace MemoryFormatReader {
 
     static bool isFormatStringValid(const std::string& format);
 
-    std::vector<FormatSpecifier> parseFormatString(const std::string& format);
-
     template <typename T>
-    std::optional<T> readNumberFromMemory(const void* memory, std::size_t numSize)
+    static std::optional<T> readNumberFromMemory(const void* memory, const std::size_t numSize)
     {
 
         if (numSize > BITS_IN_BYTE) {
@@ -33,7 +31,9 @@ namespace MemoryFormatReader {
         return static_cast<T>(bits.to_ullong() >> (BITS_IN_BYTE - numSize));
     }
 
-    std::string readStringFromMemory(const void* memory, const std::size_t numSize);
+    static std::string readStringFromMemory(const void* memory, const std::size_t numSize);
+
+    std::vector<FormatSpecifier> parseFormatString(const std::string& format);
 
     std::map<const void*, std::string> readDataFromMemory(const void* memory, const std::vector<MemoryFormatReader::FormatSpecifier>& formatSpecifiers, const size_t dataSize);
 

@@ -11,12 +11,12 @@ public:
 	~MemoryScannner(void);
 
 	void search(const int value);
-	void filter(const int value);
-	void write(const int value);
-	void print(void) const;
+	void filter(const int value) noexcept;
+	void write(const int value) noexcept;
+	void print(void) const noexcept;
 
 private:
-	inline static bool isMemoryRegionValid(const MEMORY_BASIC_INFORMATION& memoryInfo);
+	inline static bool isMemoryRegionValid(const MEMORY_BASIC_INFORMATION& memoryInfo) noexcept;
 
 	void searchProcess(HANDLE process, const int value);
 	void searchMemoryRegion(HANDLE process, const MEMORY_BASIC_INFORMATION& memoryInfo, const int value);

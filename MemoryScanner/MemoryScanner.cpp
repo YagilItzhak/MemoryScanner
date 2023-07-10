@@ -85,7 +85,7 @@ void MemoryScannner::searchMemoryRegion(HANDLE process, const MEMORY_BASIC_INFOR
 	{
 		for (size_t i = 0; i < bufferSize - sizeof(value); i++)
 		{
-			const int* currentValue = reinterpret_cast<int*>(buffer + i);
+			const int* currentValue = reinterpret_cast<int*>(&buffer[i]);
 			if (*currentValue == value)
 			{
 				this->addresses.push_back(reinterpret_cast<void*>(reinterpret_cast<unsigned char*>(memoryInfo.BaseAddress) + i));
