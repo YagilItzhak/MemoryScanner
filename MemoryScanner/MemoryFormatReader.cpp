@@ -1,4 +1,4 @@
-#include "MemoryFormatReader.h"
+/*#include "MemoryFormatReader.h"
 
 
 
@@ -23,7 +23,7 @@ bool MemoryFormatReader::isFormatStringValid(const std::string& format)
         }
 
         // Check for number component
-        while (formatIndex < formatSize && format.at(formatIndex) != ':' && isdigit(format.at(formatIndex)))
+        while (formatIndex < formatSize && format.at(formatIndex) != '%' && isdigit(format.at(formatIndex)))
         {
             formatIndex++;
         }
@@ -34,8 +34,8 @@ bool MemoryFormatReader::isFormatStringValid(const std::string& format)
             return false;
         }
 
-        // Check for colon separator
-        if (format.at(formatIndex) == ':')
+        // Check for percent separator
+        if (format.at(formatIndex) == '%')
         {
             formatIndex++;
         }
@@ -47,7 +47,7 @@ bool MemoryFormatReader::isFormatStringValid(const std::string& format)
         formatIndex++;
 
         // Skip any remaining characters until the next format specifier or the end of the format
-        while (formatIndex < formatSize && format.at(formatIndex) != '?' && format.at(formatIndex) != ':')
+        while (formatIndex < formatSize && format.at(formatIndex) != '?' && format.at(formatIndex) != '%' && !isspace(format.at(formatIndex)))
         {
             formatIndex++;
         }
@@ -65,57 +65,59 @@ bool MemoryFormatReader::isFormatStringValid(const std::string& format)
 
 std::vector<MemoryFormatReader::FormatSpecifier> MemoryFormatReader::parseFormatString(const std::string& format)
 {
-    if (isFormatStringValid(format))
-    {
-        throw std::runtime_error("Invalid format.");
-    }
-	std::vector<FormatSpecifier> formatSpecifiers;
+    std::vector<FormatSpecifier> formatSpecifiers;
 
-	size_t formatIndex = 0;
-	const size_t formatSize = format.size();
+    std::size_t pos = 0;
+    std::size_t len = format.length();
 
-	// Loop until all format specifiers are parsed
-	while (formatIndex < formatSize)
-	{
-		FormatSpecifier specifier;
+    while (pos < len) {
+        if (format[pos] == '%') {
+            if (pos + 2 < len && (format[pos + 1] == 'u' || format[pos + 1] == 'i' || format[pos + 1] == 'f')) {
+                std::size_t numSize = 0;
+                char dataType = format[pos + 1];
+                bool isOptional = false;
+                std::optional<std::string> value;
 
-		specifier.numSize = 0;
-		specifier.isOptional = false;
+                pos += 2;
+                while (pos < len && std::isdigit(format[pos])) {
+                    numSize = numSize * 10 + (format[pos] - '0');
+                    ++pos;
+                }
 
-		if (format.at(formatIndex) == '?') {
-			specifier.isOptional = true;
-			formatIndex++;
-		}
+                if (pos < len && format[pos] == '=') {
+                    ++pos;
+                    std::string val;
+                    while (pos < len && std::isdigit(format[pos])) {
+                        val += format[pos];
+                        ++pos;
+                    }
+                    value = val;
+                }
 
-		while (format[formatIndex] != ':' && formatIndex < formatSize) {
-            if (isdigit(format.at(formatIndex)))
-            {
-                specifier.numSize = (specifier.numSize * 10) + (format.at(formatIndex) - '0');
-                formatIndex++;
+                if (pos < len && format[pos] == '?') {
+                    isOptional = true;
+                    ++pos;
+                }
+
+                formatSpecifiers.push_back({ numSize, dataType, isOptional, value });
             }
-		}
+            else {
+                throw std::runtime_error("Invalid format string");
+            }
+        }
+        else {
+            std::string str;
+            while (pos < len && format[pos] != '%') {
+                str += format[pos];
+                ++pos;
+            }
+            formatSpecifiers.push_back({ 0, 's', false, str });
+        }
+    }
 
-		// Check if we have reached the end of the format
-		if (formatIndex >= formatSize) {
-			throw std::runtime_error("Insufficient format specification");
-		}
-
-		// Read the data type from format
-		if (format[formatIndex] == ':') {
-			formatIndex++;
-			specifier.dataType = format[formatIndex];
-		}
-		else {
-			throw std::runtime_error("Invalid format specification");
-		}
-
-		formatSpecifiers.push_back(specifier);
-
-		formatIndex++;
-	}
-
-	return formatSpecifiers;
+    return formatSpecifiers;
 }
+
 
 std::string MemoryFormatReader::readStringFromMemory(const void* memory, const std::size_t numSize)
 {
@@ -235,3 +237,4 @@ std::map<const void*, std::string> MemoryFormatReader::readDataFromMemory(const 
 
     return matches;
 }
+*/
